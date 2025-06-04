@@ -1,0 +1,53 @@
+# Create action definition
+name: 'SAIST Security Scanner'
+description: 'AI-powered security scanning using SAIST'
+branding:
+  icon: 'shield'
+  color: 'red'
+
+inputs:
+  github-token:
+    description: 'GitHub token for PR comments'
+    required: true
+  llm-provider:
+    description: 'LLM provider (openai, anthropic, ollama)'
+    required: false
+    default: 'openai'
+  openai-api-key:
+    description: 'OpenAI API key'
+    required: false
+  anthropic-api-key:
+    description: 'Anthropic API key'
+    required: false
+  fail-on-high:
+    description: 'Fail build on HIGH severity findings'
+    required: false
+    default: 'true'
+  fail-on-critical:
+    description: 'Fail build on CRITICAL severity findings'
+    required: false
+    default: 'true'
+  scan-mode:
+    description: 'Scan mode: full, diff, or changed-files'
+    required: false
+    default: 'changed-files'
+
+outputs:
+  findings-count:
+    description: 'Number of security findings'
+  critical-count:
+    description: 'Number of critical findings'
+  high-count:
+    description: 'Number of high severity findings'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.github-token }}
+    - ${{ inputs.llm-provider }}
+    - ${{ inputs.openai-api-key }}
+    - ${{ inputs.anthropic-api-key }}
+    - ${{ inputs.fail-on-high }}
+    - ${{ inputs.fail-on-critical }}
+    - ${{ inputs.scan-mode }}

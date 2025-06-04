@@ -1,0 +1,24 @@
+name: Security Scan Example
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Run SAIST Security Scan
+        uses: ./.github/actions/saist-scanner
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          llm-provider: 'openai'
+          fail-on-critical: 'true'
+          fail-on-high: 'false'
+
+
